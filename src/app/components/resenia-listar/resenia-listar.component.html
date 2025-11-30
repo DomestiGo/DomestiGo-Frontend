@@ -1,0 +1,106 @@
+<div class="container">
+  <div class="page-header">
+    <div class="header-content">
+      <h1 class="page-title">
+        <mat-icon>star</mat-icon>
+        Reseñas
+      </h1>
+      <p class="page-subtitle">Gestión de reseñas del sistema</p>
+    </div>
+    <button mat-raised-button color="primary" (click)="crear()" class="add-button">
+      <mat-icon>add</mat-icon>
+      Nueva Reseña
+    </button>
+  </div>
+
+  <div class="filters-section">
+    <mat-card class="filters-card">
+      <mat-card-content>
+        <div class="filters-grid">
+          <mat-form-field appearance="outline">
+            <mat-label>Buscar reseñas</mat-label>
+            <input
+              matInput
+              [(ngModel)]="searchTerm"
+              (input)="onSearchChange()"
+              placeholder="Buscar por comentario, usuario o servicio..."
+            >
+            <mat-icon matSuffix>search</mat-icon>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </div>
+
+  <div class="loading-container" *ngIf="loading">
+    <mat-spinner diameter="50"></mat-spinner>
+    <p>Cargando reseñas...</p>
+  </div>
+
+  <div class="cards-grid" *ngIf="!loading && reseniasPaginadas.length > 0">
+    <mat-card *ngFor="let resenia of reseniasPaginadas" class="user-card">
+
+      <div class="card-header">
+        <div class="user-avatar" style="background-color: #f59e0b; color: white;">
+          <span style="font-weight: bold; font-size: 1.2rem;">{{ resenia.calificacionResenia }}</span>
+        </div>
+        <div class="user-info">
+          <h3 class="user-name">{{ getNombreCompleto(resenia) }}</h3>
+          <p class="user-rating" style="color: #f59e0b; margin: 0; font-size: 1.1rem; letter-spacing: 2px;">
+            {{ getEstrellas(resenia.calificacionResenia) }}
+          </p>
+          <span class="user-id">#{{ resenia.idResenia }}</span>
+        </div>
+      </div>
+
+      <div class="card-content">
+        <div class="info-row">
+          <mat-icon>build</mat-icon>
+          <span class="label">Servicio:</span>
+          <span class="value">{{ resenia.servicio.tipoServicio }}</span>
+        </div>
+
+        <div class="info-row">
+          <mat-icon>calendar_today</mat-icon>
+          <span class="label">Fecha:</span>
+          <span class="value">{{ formatearFecha(resenia.fechaResenia) }}</span>
+        </div>
+
+        <div class="info-row" style="align-items: flex-start;">
+          <mat-icon style="margin-top: 2px;">comment</mat-icon>
+          <div style="display: flex; flex-direction: column;">
+            <span class="label">Comentario:</span>
+            <span class="value" style="font-style: italic; color: #555; margin-top: 4px;">
+              "{{ resenia.comentarioResenia }}"
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <button mat-button color="primary" (click)="editar(resenia.idResenia)">
+          <mat-icon>edit</mat-icon>
+          Editar
+        </button>
+        <button mat-button color="warn" (click)="eliminar(resenia)">
+          <mat-icon>delete</mat-icon>
+          Eliminar
+        </button>
+      </div>
+    </mat-card>
+  </div>
+
+  <div class="no-results" *ngIf="!loading && reseniasFiltradas.length === 0">
+    <mat-card class="no-results-card">
+      <div class="no-results-content">
+        <mat-icon class="no-results-icon">star_border</mat-icon>
+        <h3>No se encontraron reseñas</h3>
+        <p>No hay reseñas que coincidan con tu búsqueda</p>
+        <button mat-raised-button color="primary" (click)="crear()">
+          <mat-icon>add</mat-icon>
+          Crear Primera Reseña
+        </button>
+      </div>
+    </mat-card>
+  </div>
+</div>
